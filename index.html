@@ -107,6 +107,34 @@
     - Added a dedicated stop button in the sticky control bar that appears only while a simulation is running and preserves partial results when stopped early.
     - Cleaned the pooled chart rendering path and removed the stray options/pattern block that had leaked into the shift-chart renderer.
 
+    [15_4]
+    - Fixed the top-bar Run all control so the button fits cleanly inside its chip and the top bar uses more stable column sizing.
+    - Promoted the Networks launcher to a strong accent button and enlarged the network modal so the browser opens at a more readable scale.
+    - Right-aligned the threshold-panel visibility controls to match the other stage panels.
+    - Made the raw run-means figure use the same neutral white chart surface as the rest of the app instead of the leftover cool gradient.
+
+    [15_6]
+    - Restored the chart visibility controls to the shared blue-accent treatment so predicted / experimental / previous toggles stay visually consistent across panels.
+    - Limited the mauve input-accent styling to the functional together / separate prior-mode controls in panels 4 and 5 instead of tinting the stage-5 visibility toggle.
+
+    [15_2]
+    - Carried the deep-red control language into a warm-neutral page chrome so the interface reads as one system without recoloring the plotted data layers.
+    - Kept figure plotting surfaces near-white while shifting panels, cards, borders, and modal surfaces away from the earlier cool-blue tint.
+    - Moved chart tooltips to fixed viewport positioning so they can extend beyond figure bounds without being clipped by the plot container.
+
+    [15_1]
+    - Streamlined the sticky control bar by removing the redundant simulation-count box, moving normalization beside presenter mode, and folding the network count into the network-family summary.
+    - Switched the top-level control styling from green to a restrained deep-red theme so the command surface has one consistent accent without colliding with the figure palettes.
+    - Removed the default network selection and added page-background deselection so focus only appears after an explicit choice.
+    - Enlarged figure tooltips for easier reading on higher-resolution displays.
+
+    [15_0]
+    - Reworked the top bar into a balanced long-form layout with labeled summary chips, a dedicated presenter-mode control, and a single Run all action.
+    - Removed visible caption clutter from the main page by suppressing explanatory subtitles, formula callouts, and other small commentary blocks.
+    - Reframed titles and labels around consistent mathematical names and symbols, including cleaner use of ε, T, R, N, (k,s), m, Var(Y), Var(L), Var(C), and Var(B).
+    - Replaced the previous scroll-snapping / auto-centering behavior with ordinary scrolling so long runs no longer drag the viewport through the pipeline.
+    - Rebalanced the page scale, spacing, and chart heights for a steadier cross-monitor presentation, especially between 1080p and 1440p displays.
+
     [14_13]
     - Replaced the split top-bar execution model with one Run all control that computes the full pipeline from the current parameters.
     - Hid the per-panel predicted / experimental execution rows so local controls are now purely about visibility rather than computation.
@@ -156,7 +184,7 @@
     - Collapsed the raw experimental visibility and ordering controls into one three-way segmented switch: run order, sorted, hidden.
     - Removed wheel-based zoom from the pooled, threshold, and credence charts so page scrolling no longer gets trapped by the figures.
   -->
-  <title>Network Asymmetry Variance Model 14_13</title>
+  <title>Network Asymmetry Variance Model</title>
   <style>
     :root {
       --bg: #f4f7fb;
@@ -792,11 +820,11 @@
       background: rgba(15, 19, 24, 0.985);
       color: #fff;
       border-radius: 11px;
-      padding: 10px 11px;
-      min-width: 188px;
-      max-width: min(360px, calc(100% - 12px));
-      font-size: 8.1px;
-      line-height: 1.32;
+      padding: 12px 13px;
+      min-width: 240px;
+      max-width: min(460px, calc(100% - 12px));
+      font-size: clamp(12px, 0.18vw + 10.4px, 14.8px);
+      line-height: 1.4;
       box-shadow: 0 12px 26px rgba(0,0,0,0.26);
       opacity: 0;
       transform: translate(-9999px, -9999px);
@@ -806,9 +834,9 @@
     }
     .tooltip-title {
       font-weight: 700;
-      font-size: 9px;
-      margin-bottom: 8px;
-      padding-bottom: 6px;
+      font-size: clamp(12.8px, 0.18vw + 10.9px, 15.4px);
+      margin-bottom: 9px;
+      padding-bottom: 7px;
       border-bottom: 1px solid rgba(255,255,255,0.14);
       letter-spacing: 0.01em;
     }
@@ -841,7 +869,7 @@
       border-color: rgba(255,255,255,0.12);
     }
     .tooltip-section-head {
-      font-size: 7.8px;
+      font-size: clamp(10.4px, 0.12vw + 9.2px, 12.4px);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -1132,65 +1160,783 @@
       .control-counts { grid-column: auto; }
       .control-inline, .control-inline.short { grid-template-columns: 1fr; }
     }
+  
+
+    /* 15_0 layout and language cleanup */
+    :root {
+      --ui-font-0: clamp(11.4px, 0.14vw + 10.1px, 13.6px);
+      --ui-font-1: clamp(12.6px, 0.18vw + 10.8px, 15.6px);
+      --ui-font-2: clamp(14.2px, 0.24vw + 11.8px, 18.8px);
+      --ui-font-3: clamp(18px, 0.42vw + 13px, 26px);
+      --stage-gap: clamp(46px, 6vw, 118px);
+      --panel-pad: clamp(12px, 1vw, 18px);
+      --control-1: #f7eeee;
+      --control-2: #e4caca;
+      --control-3: #7f1d1d;
+      --control-4: #5c1414;
+      --control-5: #451010;
+      --bg: #f6efef;
+      --panel: #fff9f8;
+      --panel-2: #fdf4f3;
+      --border: #e7d3d0;
+      --border-strong: #b68a84;
+      --text: #2a1f1f;
+      --muted: #715a58;
+      --shadow: rgba(46,17,17,0.10);
+      --grid: rgba(120,79,79,0.14);
+    }
+    html {
+      scroll-behavior: auto !important;
+      scroll-snap-type: none !important;
+      scroll-padding-top: 0 !important;
+    }
+    body { scroll-snap-type: none !important; font-size: var(--ui-font-0); }
+    .page {
+      position: relative;
+      width: min(1820px, calc(100vw - clamp(24px, 4.5vw, 120px)));
+      padding: clamp(18px, 1.4vw, 28px) 0 80px;
+    }
+    h1 { margin: 0 0 8px; font-size: var(--ui-font-3); letter-spacing: 0.005em; }
+    .version-tag {
+      position: absolute;
+      top: clamp(16px, 1.3vw, 24px);
+      right: 0;
+      font-family: var(--mono);
+      font-size: clamp(10px, 0.14vw + 8.9px, 12px);
+      color: var(--muted);
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(140,160,186,0.45);
+      border-radius: 999px;
+      padding: 4px 8px;
+      box-shadow: 0 1px 2px rgba(29,42,56,0.05);
+    }
+    .lead,
+    .stage-sub,
+    .controls .subnote,
+    .chart-card .subnote,
+    .network-strip .subnote,
+    .info-card .subnote,
+    .formula,
+    .note,
+    .small-note,
+    .stage-pass-row {
+      display: none !important;
+    }
+    .control-panel,
+    .tiny-strip.control-panel {
+      grid-template-columns: minmax(300px,1.45fr) minmax(300px,1.35fr) auto minmax(180px,0.82fr) minmax(200px,0.95fr) !important;
+      gap: clamp(8px, 0.8vw, 12px);
+      padding: clamp(8px, 0.8vw, 12px);
+      top: clamp(8px, 0.9vw, 14px);
+      margin-bottom: var(--stage-gap);
+      background: linear-gradient(180deg, rgba(255,248,248,0.985), rgba(250,239,239,0.96));
+      border-color: rgba(127,29,29,0.26);
+    }
+    .strip-chip,
+    .strip-actions {
+      min-height: 56px;
+      padding: 8px 10px;
+      font-size: var(--ui-font-0);
+      gap: 8px;
+      align-items: stretch;
+      border-color: rgba(127,29,29,0.22);
+      background: rgba(255,255,255,0.92);
+    }
+    .strip-chip {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .strip-chip label,
+    .chip-title,
+    .seg-label,
+    .field label,
+    .metric .label,
+    .legend,
+    .network-view-chip,
+    .network-modal-sub,
+    .network-modal-summary,
+    .thumb-card-label,
+    .thumb-card-meta,
+    input[type="number"],
+    select,
+    button {
+      font-size: var(--ui-font-0);
+    }
+    .chip-title {
+      color: var(--muted);
+      font-size: clamp(10px, 0.1vw + 9.1px, 11.8px);
+      line-height: 1.05;
+      text-transform: none;
+    }
+    .chip-value {
+      color: var(--text);
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .strip-summary { justify-content: center; }
+    .accent-chip {
+      background: linear-gradient(180deg, var(--control-1), #fff8f8);
+      border-color: var(--control-2);
+      box-shadow: 0 1px 2px rgba(92,20,20,0.08);
+    }
+    .normalization-chip select {
+      border-color: var(--control-3);
+      color: var(--control-4);
+      background: rgba(255,255,255,0.96);
+      font-weight: 700;
+    }
+    .presenter-chip,
+    .normalization-chip { justify-content: center; }
+    .presenter-toggle { align-self: flex-start; }
+    .presenter-chip .segmented {
+      border-color: rgba(127,29,29,0.26);
+      background: rgba(255,255,255,0.88);
+      --seg-active: var(--control-3);
+      --seg-active-border: rgba(92,20,20,0.22);
+      --seg-active-text: #fff;
+    }
+    .strip-actions.global-actions {
+      justify-content: center;
+      align-items: center;
+      min-width: 132px;
+      padding-inline: 0;
+    }
+    .pipeline-action.fill-pass {
+      background: var(--control-3);
+      border-color: var(--control-4);
+      color: #fff;
+      min-width: 132px;
+      font-weight: 800;
+    }
+    .pipeline-action.fill-pass:hover:not(:disabled) {
+      background: var(--control-4);
+      border-color: var(--control-5);
+    }
+    body {
+      background: linear-gradient(180deg, #f8f1f0 0%, var(--bg) 44%, #f4eceb 100%);
+      color: var(--text);
+    }
+    .version-tag {
+      background: rgba(255,249,249,0.88);
+      border-color: rgba(127,29,29,0.18);
+      box-shadow: 0 1px 3px rgba(46,17,17,0.07);
+    }
+    section.stage {
+      background: var(--panel);
+      border-color: rgba(127,29,29,0.14);
+      box-shadow: 0 8px 22px rgba(46,17,17,0.07);
+    }
+    .controls,
+    .info-card,
+    .network-strip,
+    .chart-card {
+      background: var(--panel-2);
+      border-color: rgba(127,29,29,0.10);
+      box-shadow: 0 2px 8px rgba(46,17,17,0.04);
+    }
+    .metric,
+    .legend-block,
+    .legend .item,
+    .network-view-chip,
+    .thumb,
+    .thumb-card.active,
+    .network-modal-controls,
+    .network-thumb-scroll {
+      border-color: rgba(127,29,29,0.12);
+    }
+    .metric,
+    .legend-block,
+    .legend .item,
+    .network-view-chip,
+    .thumb,
+    .network-modal-controls {
+      background: rgba(255,252,252,0.88);
+    }
+    .chart-wrap {
+      background: #fffdfd;
+      border-color: rgba(127,29,29,0.14);
+      overflow: visible;
+      isolation: isolate;
+    }
+    .raw-canvas-host,
+    .svg-host {
+      background: linear-gradient(180deg, #fffefe 0%, #fbf3f2 100%);
+      border-radius: 9px;
+      overflow: hidden;
+    }
+    .network-modal-card {
+      background: linear-gradient(180deg, #fff9f8 0%, #f9efee 100%);
+      border-color: rgba(127,29,29,0.16);
+      box-shadow: 0 22px 52px rgba(46,17,17,0.16);
+    }
+    .network-thumb-scroll {
+      background: linear-gradient(180deg, #fffdfd 0%, #f9f0ef 100%);
+    }
+    .tooltip {
+      position: fixed;
+      z-index: 140;
+      max-width: min(420px, calc(100vw - 24px));
+    }
+    section.stage {
+      padding: var(--panel-pad);
+      margin-bottom: var(--stage-gap);
+      scroll-snap-align: none !important;
+    }
+    .stage-header { margin-bottom: 12px; }
+    .stage-header h2 { font-size: var(--ui-font-2); }
+    .controls h3,
+    .chart-card h3,
+    .network-strip h3,
+    .info-card h3,
+    .network-modal-title {
+      font-size: var(--ui-font-1);
+      margin-bottom: 8px;
+    }
+    .row,
+    .row.wide-controls,
+    .raw-layout {
+      grid-template-columns: minmax(300px, 350px) minmax(0, 1fr);
+      gap: clamp(14px, 1.3vw, 22px);
+    }
+    .controls,
+    .info-card,
+    .network-strip,
+    .chart-card {
+      padding: clamp(12px, 1vw, 18px);
+      border-radius: 12px;
+    }
+    .cards {
+      grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+      gap: 10px;
+    }
+    .metric {
+      min-height: 52px;
+      padding: 8px 9px;
+    }
+    .metric .value { font-size: var(--ui-font-1); }
+    .raw-canvas-host { height: clamp(250px, 26vw, 360px); }
+    .chart-wrap { min-height: clamp(250px, 26vw, 360px); }
+    .chart-wrap.tall { min-height: clamp(290px, 32vw, 420px); }
+    .chart-toolbar { margin-bottom: 10px; }
+    .network-modal-controls {
+      grid-template-columns: 120px 120px 100px auto;
+      gap: 10px;
+      padding: 10px;
+    }
+    @media (max-width: 1380px) {
+      .control-panel,
+      .tiny-strip.control-panel {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+      .row,
+      .row.wide-controls,
+      .raw-layout {
+        grid-template-columns: minmax(280px, 330px) minmax(0, 1fr);
+      }
+    }
+    @media (max-width: 1120px) {
+      .page { width: calc(100vw - 18px); }
+      .version-tag {
+        position: static;
+        display: inline-flex;
+        margin-bottom: 8px;
+      }
+      .control-panel,
+      .tiny-strip.control-panel {
+        grid-template-columns: 1fr !important;
+      }
+      .row,
+      .row.wide-controls,
+      .raw-layout,
+      .split-two {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+
+    /* 15_3 theme refinement */
+    :root {
+      --bg: #f5f4f1;
+      --panel: #ffffff;
+      --panel-2: #faf9f7;
+      --panel-chrome: #f0ede8;
+      --border: #e0dbd3;
+      --border-strong: #b8b0a4;
+      --text: #1c1917;
+      --muted: #78716c;
+      --shadow: rgba(28,25,23,0.08);
+      --grid: rgba(28,25,23,0.07);
+
+      --accent: #2563a8;
+      --accent-light: rgba(37,99,168,0.12);
+      --accent-text: #ffffff;
+
+      --input-accent: #a55f83;
+      --input-accent-deep: #8e4f70;
+      --input-accent-soft: rgba(165,95,131,0.14);
+
+      --action-bg: #1e293b;
+      --action-bg-hover: #0f172a;
+      --action-border: #0f172a;
+      --action-text: #ffffff;
+      --action-predict-bg: #cbd5e1;
+      --action-predict-border: #475569;
+      --action-predict-text: #0f172a;
+
+      --ev: #1c1917;
+      --iv: #4f46e5;
+      --h: #4f46e5;
+      --sv: #0891b2;
+      --mv: #059669;
+
+      --iv-pred: rgba(79,70,229,0.38);
+      --sv-pred: rgba(8,145,178,0.38);
+      --mv-pred: rgba(5,150,105,0.38);
+
+      --pool-exp-iv: #4f46e5;
+      --pool-exp-sv: #0891b2;
+      --pool-exp-total: #059669;
+      --pool-pred: #475569;
+      --pool-data: #1c1917;
+
+      --delta-pos: #d97706;
+      --delta-neg: #7c3aed;
+
+      --raw-pred: rgba(5,150,105,0.28);
+      --raw-data: #065f46;
+      --raw-data-soft: rgba(6,95,70,0.18);
+      --raw0: #b8b0a4;
+      --raw1: #2563a8;
+
+      --thumb: #2563a8;
+      --thumb-hub: #4f46e5;
+      --thumb-complete: #e0dbd3;
+      --thumb-active: #1c1917;
+    }
+    body {
+      background: var(--bg) !important;
+      color: var(--text);
+    }
+    .page {
+      color: var(--text);
+    }
+    .version-tag {
+      background: rgba(255,255,255,0.92) !important;
+      border-color: var(--border) !important;
+      color: var(--muted) !important;
+      box-shadow: 0 1px 3px var(--shadow) !important;
+    }
+    .control-panel,
+    .tiny-strip.control-panel {
+      background: var(--panel-chrome) !important;
+      border-color: var(--border) !important;
+      box-shadow: 0 6px 18px var(--shadow) !important;
+    }
+    .strip-chip,
+    .strip-actions {
+      background: var(--panel) !important;
+      border-color: var(--border) !important;
+      color: var(--text);
+      box-shadow: 0 1px 2px var(--shadow) !important;
+    }
+    .chip-title,
+    .strip-chip label,
+    .seg-label,
+    .field label,
+    .metric .label,
+    .legend,
+    .network-view-chip,
+    .network-modal-sub,
+    .network-modal-summary,
+    .thumb-card-label,
+    .thumb-card-meta {
+      color: var(--muted) !important;
+    }
+    .chip-value,
+    .metric .value,
+    .thumb-label,
+    .network-modal-title,
+    .stage-header h2,
+    .controls h3,
+    .chart-card h3,
+    .network-strip h3,
+    .info-card h3 {
+      color: var(--text) !important;
+    }
+    .accent-chip,
+    .metric,
+    .legend-block,
+    .legend .item,
+    .network-view-chip,
+    .thumb,
+    .thumb-card.active,
+    .network-modal-controls,
+    .network-thumb-scroll {
+      background: var(--panel-2) !important;
+      border-color: var(--border) !important;
+      box-shadow: none !important;
+    }
+    .legend-block-title {
+      color: var(--muted) !important;
+    }
+    .segmented {
+      background: var(--panel-2) !important;
+      border-color: var(--border) !important;
+      --seg-active: var(--accent-light) !important;
+      --seg-active-border: rgba(37,99,168,0.18) !important;
+      --seg-active-text: var(--text) !important;
+    }
+    .seg-btn {
+      color: var(--muted) !important;
+    }
+    .seg-btn.active {
+      color: var(--text) !important;
+      box-shadow: inset 0 0 0 1px rgba(37,99,168,0.18) !important;
+    }
+    .presenter-chip .segmented,
+    .normalization-chip,
+    .presenter-chip {
+      background: var(--panel-2) !important;
+      border-color: var(--border) !important;
+    }
+    .normalization-chip select,
+    select,
+    input[type="number"] {
+      background: #ffffff !important;
+      border-color: var(--border-strong) !important;
+      color: var(--text) !important;
+    }
+    select:hover,
+    input[type="number"]:hover,
+    button:hover:not(:disabled) {
+      border-color: var(--accent) !important;
+    }
+    input[type="range"] {
+      accent-color: var(--input-accent);
+    }
+    input[type="range"]:focus-visible {
+      outline: 2px solid rgba(165,95,131,0.22) !important;
+      outline-offset: 2px;
+    }
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    .thumb:focus-visible {
+      outline: 2px solid rgba(37,99,168,0.28) !important;
+      outline-offset: 1px;
+    }
+    .ghost-action {
+      background: var(--accent-light) !important;
+      border-color: rgba(37,99,168,0.22) !important;
+      color: var(--text) !important;
+      box-shadow: none !important;
+    }
+    .pipeline-action,
+    .stage-action,
+    button.primary.stage-action,
+    button.stage-action,
+    .stage-pass-button.experimental-pass,
+    .pipeline-action.fill-pass {
+      background: var(--action-bg) !important;
+      border-color: var(--action-border) !important;
+      color: var(--action-text) !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+    .pipeline-action:hover:not(:disabled),
+    .stage-action:hover:not(:disabled),
+    button.primary.stage-action:hover:not(:disabled),
+    button.stage-action:hover:not(:disabled),
+    .stage-pass-button.experimental-pass:hover:not(:disabled),
+    .pipeline-action.fill-pass:hover:not(:disabled) {
+      background: var(--action-bg-hover) !important;
+      border-color: var(--action-border) !important;
+      color: var(--action-text) !important;
+    }
+    .stage-pass-button.predict-pass,
+    .pipeline-action.predict-pass {
+      background: var(--action-predict-bg) !important;
+      border-color: var(--action-predict-border) !important;
+      color: var(--action-predict-text) !important;
+      box-shadow: none !important;
+    }
+    .stage-pass-button.predict-pass:hover:not(:disabled),
+    .pipeline-action.predict-pass:hover:not(:disabled) {
+      background: #d8e0ea !important;
+      border-color: var(--action-predict-border) !important;
+      color: var(--action-predict-text) !important;
+    }
+    .stage-pass-button.predict-pass.is-complete,
+    .stage-pass-button.predict-pass:disabled.is-complete {
+      background: #b8c4d3 !important;
+      border-color: var(--action-predict-border) !important;
+      color: var(--action-predict-text) !important;
+    }
+    .stage-pass-button.experimental-pass.is-complete,
+    .stage-pass-button.experimental-pass:disabled.is-complete {
+      background: #162033 !important;
+      border-color: var(--action-border) !important;
+      color: var(--action-text) !important;
+    }
+    section.stage {
+      background: var(--panel) !important;
+      border-color: var(--border) !important;
+      box-shadow: 0 8px 22px var(--shadow) !important;
+    }
+    .controls,
+    .info-card,
+    .network-strip,
+    .chart-card,
+    .network-modal-card {
+      background: var(--panel) !important;
+      border-color: var(--border) !important;
+      box-shadow: 0 2px 10px rgba(28,25,23,0.04) !important;
+    }
+    .network-modal-card {
+      background: var(--panel) !important;
+    }
+    .chart-wrap,
+    .raw-canvas-host,
+    .svg-host {
+      background: #ffffff !important;
+      border-color: var(--border) !important;
+      background-image: none !important;
+    }
+    .tooltip {
+      background: rgba(15,12,10,0.96) !important;
+      border-color: rgba(255,255,255,0.08) !important;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.22) !important;
+    }
+    .tooltip-section[data-tone="pred"] {
+      background: rgba(79,70,229,0.12) !important;
+      border-color: rgba(79,70,229,0.34) !important;
+    }
+    .tooltip-section[data-tone="exp"] {
+      background: rgba(79,70,229,0.22) !important;
+      border-color: rgba(79,70,229,0.42) !important;
+    }
+    .tooltip-section[data-tone="prev"] {
+      background: rgba(28,25,23,0.16) !important;
+      border-color: rgba(255,255,255,0.14) !important;
+    }
+    .tooltip-section[data-tone="note"] {
+      background: rgba(255,255,255,0.05) !important;
+      border-color: rgba(255,255,255,0.10) !important;
+    }
+    .tooltip-section-head,
+    .tooltip-key,
+    .tooltip-note {
+      color: rgba(255,255,255,0.86) !important;
+    }
+
+    .thumb.active,
+    .thumb-card.active {
+      border-color: var(--accent) !important;
+      box-shadow: inset 0 0 0 1px rgba(37,99,168,0.22) !important;
+      background: #ffffff !important;
+    }
+
+
+    /* 15_4 layout polish */
+    .control-panel,
+    .tiny-strip.control-panel {
+      grid-template-columns: minmax(320px, 1.55fr) minmax(320px, 1.45fr) minmax(150px, 0.48fr) minmax(190px, 0.76fr) minmax(230px, 0.96fr) !important;
+    }
+    .strip-actions.global-actions {
+      min-width: 0 !important;
+      width: 100%;
+      padding: 8px 10px !important;
+      align-items: stretch !important;
+      justify-content: stretch !important;
+      background: var(--panel) !important;
+      border-color: var(--border) !important;
+      box-shadow: 0 1px 2px var(--shadow) !important;
+      overflow: hidden;
+    }
+    .strip-actions.global-actions .pipeline-action {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-width: 0 !important;
+      min-height: 38px;
+      margin: 0;
+      padding: 8px 14px;
+      white-space: nowrap;
+      box-sizing: border-box;
+      align-self: stretch;
+    }
+    #openNetworkModalButton {
+      background: var(--input-accent) !important;
+      border-color: var(--input-accent-deep) !important;
+      color: #ffffff !important;
+      font-weight: 700;
+      box-shadow: none !important;
+    }
+    #openNetworkModalButton:hover:not(:disabled) {
+      background: var(--input-accent-deep) !important;
+      border-color: #74405b !important;
+      color: #ffffff !important;
+    }
+    #openNetworkModalButton:focus-visible {
+      outline: 2px solid rgba(165,95,131,0.24) !important;
+      outline-offset: 1px;
+    }
+    #stage-credence .controls .segmented,
+    #stage-beta-credence .controls .segmented {
+      --seg-active: var(--input-accent-soft) !important;
+      --seg-active-border: rgba(165,95,131,0.26) !important;
+      --seg-active-text: var(--text) !important;
+      border-color: rgba(165,95,131,0.18) !important;
+    }
+    #stage-credence .controls .seg-btn.active,
+    #stage-beta-credence .controls .seg-btn.active {
+      box-shadow: inset 0 0 0 1px rgba(165,95,131,0.28) !important;
+      color: var(--text) !important;
+    }
+    #stage-threshold .chart-toolbar > div:first-child {
+      width: auto !important;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    #stage-threshold .chart-toolbar {
+      align-items: flex-start;
+    }
+    #stage-threshold .chart-toolbar .segmented-wrap {
+      margin-left: auto;
+      justify-content: flex-end;
+      align-self: flex-start;
+      flex: 0 0 auto;
+    }
+    .network-modal-card {
+      width: min(1880px, calc(100vw - 20px)) !important;
+      max-height: min(94vh, 1040px) !important;
+      padding: 14px !important;
+      gap: 12px !important;
+    }
+    .network-modal-head {
+      gap: 12px;
+      align-items: center;
+    }
+    .network-modal-controls {
+      grid-template-columns: 132px 132px 112px auto auto !important;
+      gap: 12px !important;
+      padding: 12px !important;
+    }
+    .network-thumb-scroll {
+      padding: 14px 16px 14px 10px !important;
+    }
+    .thumb-card-grid {
+      gap: 8px !important;
+    }
+    .thumb-card {
+      padding: 4px !important;
+    }
+    .thumb-card canvas {
+      width: 72px !important;
+      height: 72px !important;
+    }
+    .network-modal-title {
+      font-size: clamp(14px, 0.32vw + 11px, 20px) !important;
+    }
+    .network-modal-sub,
+    .network-modal-summary,
+    .network-modal-controls label,
+    .network-modal-controls input,
+    .network-modal-controls select,
+    .network-modal-controls button {
+      font-size: clamp(11px, 0.14vw + 9.8px, 14px) !important;
+    }
+    @media (max-width: 1380px) {
+      .control-panel,
+      .tiny-strip.control-panel {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+      .strip-actions.global-actions {
+        padding: 0 !important;
+      }
+    }
+    @media (max-width: 1180px) {
+      .network-modal-card {
+        width: min(96vw, 1280px) !important;
+        max-height: 94vh !important;
+      }
+      .network-modal-controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+      .network-modal-summary {
+        grid-column: 1 / -1;
+        justify-self: start;
+        text-align: left;
+      }
+    }
+
   </style>
 </head>
 <body>
   <div class="page">
-    <h1>Network Asymmetry Variance Model 14_13</h1>
-    <p class="lead">Compact single-page view of the variance pipeline: raw evidence, pooled evidence, threshold, and credence. The pooled stage remains the center: EV = q(1-q) is redistributed into IV, SV, and MV.</p>
+    <h1>Network Asymmetry Variance Model</h1>
+    <div class="version-tag">v15.6</div>
 
     <div class="control-panel tiny-strip">
-      <div class="strip-chip">
-        <label for="viewModeSelect">view</label>
+      <div class="strip-chip strip-summary">
+        <span class="chip-title">Raw source</span>
+        <span class="chip-value" id="historyRaw">ε=— · T=— · Runs=—</span>
+      </div>
+      <div class="strip-chip strip-summary">
+        <span class="chip-title">Network family</span>
+        <span class="chip-value" id="historyNetwork">N=— · Networks=—</span>
+      </div>
+      <div class="strip-actions global-actions">
+        <button id="runPredictionsButton" class="pipeline-action fill-pass" type="button">Run all</button>
+      </div>
+      <div class="strip-chip presenter-chip accent-chip">
+        <span class="chip-title">Presenter mode</span>
+        <div class="segmented presenter-toggle">
+          <button type="button" class="seg-btn active" id="presenterModeOff">off</button>
+          <button type="button" class="seg-btn" id="presenterModeOn">on</button>
+        </div>
+      </div>
+      <div class="strip-chip normalization-chip accent-chip">
+        <span class="chip-title">Normalization</span>
         <select id="viewModeSelect">
           <option value="absolute">absolute</option>
-          <option value="ev">normalize by EV</option>
-          <option value="network-total">normalize by each network total</option>
+          <option value="ev">EV-normalized</option>
+          <option value="network-total">stage-normalized</option>
         </select>
-      </div>
-      <div class="strip-chip strip-history" id="historyRaw">raw: —</div>
-      <div class="strip-chip strip-history" id="historyNetwork">network: —</div>
-      <div class="strip-chip strip-history" id="statusText">runs/setting 0 · nets 0 · total 0</div>
-      <div class="strip-actions global-actions">
-        <div class="segmented-wrap compact-top-toggle">
-          <span class="seg-label">presenter</span>
-          <div class="segmented">
-            <button type="button" class="seg-btn active" id="presenterModeOff">off</button>
-            <button type="button" class="seg-btn" id="presenterModeOn">on</button>
-          </div>
-        </div>
-        <button id="runPredictionsButton" class="pipeline-action fill-pass" type="button">run all</button>
       </div>
     </div>
 
     <section class="stage" id="stage-raw">
       <div class="stage-header">
         <div>
-          <h2>1. Raw evidential stage</h2>
+          <h2>1. Raw evidence</h2>
           <p class="stage-sub">Purpose. Generate the reusable agent-level evidence source for the current N and trial split. Later stages inherit from this source instead of redrawing evidence.</p>
         </div>
       </div>
       <div class="raw-layout">
         <div class="info-card">
-          <h3>Raw evidence controls</h3>
+          <h3>Parameters</h3>
           <div class="subnote">Inputs. Changing ε, total trials, runs, or population clears inherited downstream stages.</div>
           <div class="field-grid" style="margin-bottom:10px;">
             <div class="field full">
-              <label for="epsilonInput">epsilon ε</label>
+              <label for="epsilonInput">ε (signal bias)</label>
               <div class="inline-pair">
                 <input id="epsilonInput" type="number" min="0.0000005" max="0.5" step="0.0000005" value="0.0005" />
                 <input id="epsilonRange" type="range" min="0" max="6" step="1" value="3" />
               </div>
             </div>
             <div class="field full">
-              <label for="trialsInput">total evidence trials per run</label>
+              <label for="trialsInput">T (total trials/run)</label>
               <div class="inline-pair">
                 <input id="trialsInput" type="number" min="10" max="100000" step="10" value="240" />
                 <input id="trialsRange" type="range" min="0" max="5" step="1" value="2" />
               </div>
             </div>
             <div class="field full">
-              <label for="runsInput">iterations / runs</label>
+              <label for="runsInput">R (runs)</label>
               <input id="runsInput" type="number" min="100" max="100000" step="100" value="5000" />
             </div>
           </div>
@@ -1203,10 +1949,10 @@
           <div class="cards">
             <div class="metric"><div class="label">q = 0.5 + ε</div><div class="value" id="qValue">0.535000</div></div>
             <div class="metric"><div class="label">EV = q(1-q)</div><div class="value" id="evValue">0.248775</div></div>
-            <div class="metric"><div class="label">total trials per run</div><div class="value" id="totalTrialsValue">240</div></div>
-            <div class="metric"><div class="label">predicted Var(run mean)</div><div class="value" id="rawPredRunVarValue">0.001037</div></div>
-            <div class="metric"><div class="label">empirical mean</div><div class="value" id="rawEmpMeanValue">—</div></div>
-            <div class="metric"><div class="label">empirical Var(run mean)</div><div class="value" id="rawEmpVarValue">—</div></div>
+            <div class="metric"><div class="label">T</div><div class="value" id="totalTrialsValue">240</div></div>
+            <div class="metric"><div class="label">Var( X̄ ) pred</div><div class="value" id="rawPredRunVarValue">0.001037</div></div>
+            <div class="metric"><div class="label">E[ X̄ ] emp</div><div class="value" id="rawEmpMeanValue">—</div></div>
+            <div class="metric"><div class="label">Var( X̄ ) emp</div><div class="value" id="rawEmpVarValue">—</div></div>
           </div>
           <div class="formula">single-trial EV = q(1-q), while the raw run mean has predicted variance EV/TOTAL</div>
           <div class="note">Generate the raw evidence first. Population and network structure only enter in the next stage.</div>
@@ -1214,11 +1960,11 @@
         <div class="chart-card">
           <div class="chart-toolbar">
             <div>
-              <h3>Raw evidence frequencies across runs</h3>
+              <h3>Run means</h3>
               <div class="subnote">View. Run means update live. Prediction and empirical overlays share one figure.</div>
             </div>
             <div class="segmented-wrap">
-              <span class="seg-label">predictions</span>
+              <span class="seg-label">prediction</span>
               <div class="segmented seg-pred">
                 <button type="button" class="seg-btn active" id="rawPredOn">on</button>
                 <button type="button" class="seg-btn" id="rawPredOff">off</button>
@@ -1242,13 +1988,13 @@
     <section class="stage" id="stage-pooling">
       <div class="stage-header">
         <div>
-          <h2>2. Pooling into community evidence</h2>
+          <h2>2. Pooled evidence</h2>
           <p class="stage-sub">Purpose. Pool the stored raw evidence through the selected network family and decompose EV into IV + SV + MV.</p>
         </div>
       </div>
       <div class="row wide-controls">
         <div class="controls">
-          <h3>Pooling controls</h3>
+          <h3>Network selection</h3>
           <div class="subnote">Inputs. Network population and family selection now live in the network modal. Changing population still resets raw evidence because the upstream agent-level source changes.</div>
           <div class="field-grid" style="margin-bottom:10px;">
             <div class="field full">
@@ -1264,10 +2010,10 @@
             <button id="poolButton" class="primary stage-action pool-action stage-pass-button experimental-pass" title="Run the pooled experimental stage using the stored raw evidence.">experimental</button>
           </div>
           <div class="cards">
-            <div class="metric"><div class="label">selected network</div><div class="value" id="selectedKValue">(k=0,s=0)</div></div>
-            <div class="metric"><div class="label">neighborhood size m</div><div class="value" id="selectedMValue">1</div></div>
-            <div class="metric"><div class="label">empirical residual</div><div class="value" id="rawResidualValue">—</div></div>
-            <div class="metric"><div class="label">pred / emp Var(Y)</div><div class="value" id="pooledTotalValue">—</div></div>
+            <div class="metric"><div class="label">(k,s)</div><div class="value" id="selectedKValue">—</div></div>
+            <div class="metric"><div class="label">m</div><div class="value" id="selectedMValue">1</div></div>
+            <div class="metric"><div class="label">Δ = EV − Σ</div><div class="value" id="rawResidualValue">—</div></div>
+            <div class="metric"><div class="label">Var(Y) pred / emp</div><div class="value" id="pooledTotalValue">—</div></div>
           </div>
           <div class="formula">EV = IV + SV(Y) + MV(Y)</div>
           <div class="small-note">For s&gt;0, the pooled-raw stage still uses analytic overlap-based predictions. Later-stage predictions are preserved where available and otherwise fall back to experimental verification.</div>
@@ -1275,7 +2021,7 @@
         <div class="chart-card">
           <div class="chart-toolbar">
             <div>
-              <h3>Pooled raw accounting across the selected network family</h3>
+              <h3>Pooled variance decomposition</h3>
               <div class="subnote">View. Light bars are analytic predictions. Dark bars are simulated verification for the same network.</div>
             </div>
             <div class="segmented-wrap">
@@ -1296,7 +2042,7 @@
     <section class="stage" id="stage-threshold">
       <div class="stage-header">
         <div>
-          <h2>3. Thresholded outcome picture</h2>
+          <h2>3. Thresholded outcome</h2>
           <p class="stage-sub">Purpose. Threshold pooled evidence into L = 1(Y &gt; 0.5). Compare Var(L) = SV(L) + MV(L) against the pooled Var(Y) it comes from.</p>
         </div>
       </div>
@@ -1304,7 +2050,7 @@
         <div class="chart-toolbar">
           <div style="width:100%; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
             <div>
-            <h3>Threshold comparison across k</h3>
+            <h3>Threshold variance decomposition</h3>
             <div class="subnote">View. Filled bars are threshold results. The hatched layer is the pooled reference.</div>
             </div><div class="btn-row stage-pass-row" style="margin:0;"><button id="thresholdPredictButton" class="stage-pass-button predict-pass" type="button" title="Prepare the analytic threshold-stage prediction for the current network family.">predicted</button><button id="thresholdButton" class="primary stage-action threshold-action stage-pass-button experimental-pass" title="Run the threshold-stage experiment from the pooled evidence.">experimental</button></div>
           </div>
@@ -1324,14 +2070,14 @@
 <section class="stage" id="stage-credence">
       <div class="stage-header">
         <div>
-          <h2>4. Sign credence picture</h2>
+          <h2>4. Sign credence</h2>
           <p class="stage-sub">Purpose. Update credence that ε is positive from pooled evidence. Compare Var(C) = SV(C) + MV(C) against inherited pooled variance.</p>
         </div>
       </div>
       <div class="row">
         <div class="controls">
           <div class="btn-row stage-pass-row" style="margin-top:0; margin-bottom:10px;"><button id="bayesPredictButton" class="stage-pass-button predict-pass" type="button" title="Prepare the analytic sign-credence prediction for the current pooled model.">predicted</button><button id="bayesButton" class="primary stage-action cred-action stage-pass-button experimental-pass" title="Run the sign-credence experiment from the pooled evidence.">experimental</button></div>
-          <h3>Sign credence selection</h3>
+          <h3>Prior P(ε &gt; 0)</h3>
           <div class="subnote">Inputs. Choose the starting prior and whether agents share it or initialize independently around it.</div>
           <div class="field-grid" style="margin-bottom:10px;">
             <div class="field full">
@@ -1350,16 +2096,16 @@
             </div>
           </div>
           <div class="cards">
-            <div class="metric"><div class="label"><span title="Average posterior confidence that ε is positive for the selected network.">selected mean credence</span></div><div class="value" id="meanCredValue">—</div></div>
-            <div class="metric"><div class="label"><span title="Threshold-stage total variance Var(L)=SV(L)+MV(L) for the selected network.">threshold total Var(L)</span></div><div class="value" id="thrTotalValue">—</div></div>
-            <div class="metric"><div class="label"><span title="Sign-credence total variance Var(C)=SV(C)+MV(C) for the selected network.">sign-credence total Var(C)</span></div><div class="value" id="credTotalValue">—</div></div>
+            <div class="metric"><div class="label"><span title="Average posterior confidence that ε is positive for the selected network.">E[C] emp</span></div><div class="value" id="meanCredValue">—</div></div>
+            <div class="metric"><div class="label"><span title="Threshold-stage total variance Var(L)=SV(L)+MV(L) for the selected network.">Var(L)</span></div><div class="value" id="thrTotalValue">—</div></div>
+            <div class="metric"><div class="label"><span title="Sign-credence total variance Var(C)=SV(C)+MV(C) for the selected network.">Var(C)</span></div><div class="value" id="credTotalValue">—</div></div>
           </div>
           <div class="formula"><span title="Social variance: within one run, how much agents differ from one another at this stage.">SV(C)</span> + <span title="Modal variance: across runs, how much the community-level mean changes.">MV(C)</span> = <span title="Total variance at the sign-credence stage.">Var(C)</span>, starting from the prior above</div>
         </div>
         <div class="chart-card">
           <div class="chart-toolbar">
             <div>
-              <h3>Sign credence across k</h3>
+              <h3>Sign-credence variance decomposition</h3>
               <div class="subnote">View. Filled bars are credence results. Previous shows the variance inherited from pooling.</div>
             </div>
             <div class="segmented-wrap">
@@ -1378,17 +2124,17 @@
     <section class="stage" id="stage-beta-credence">
       <div class="stage-header">
         <div>
-          <h2>5. Beta prior credence picture</h2>
+          <h2>5. Beta-prior credence</h2>
           <p class="stage-sub">Purpose. Randomize the starting prior with a Beta distribution, then update on the same sign-of-ε evidence.</p>
         </div>
       </div>
       <div class="row">
         <div class="controls">
-          <h3>Beta prior controls</h3>
+          <h3>Beta prior</h3>
           <div class="subnote">Inputs. α and β set the prior shape. Together uses one shared draw per run; separate draws one prior per agent.</div>
           <div class="field-grid" id="betaCredenceFields">
-            <div class="field"><label for="alphaInput"><span title="Alpha shape parameter for the distribution of starting prior credence in H+.">prior α</span></label><input id="alphaInput" type="number" min="0.1" max="20" step="0.1" value="1" /></div>
-            <div class="field"><label for="betaInput"><span title="Beta shape parameter for the distribution of starting prior credence in H+.">prior β</span></label><input id="betaInput" type="number" min="0.1" max="20" step="0.1" value="1" /></div>
+            <div class="field"><label for="alphaInput"><span title="Alpha shape parameter for the distribution of starting prior credence in H+.">α</span></label><input id="alphaInput" type="number" min="0.1" max="20" step="0.1" value="1" /></div>
+            <div class="field"><label for="betaInput"><span title="Beta shape parameter for the distribution of starting prior credence in H+.">β</span></label><input id="betaInput" type="number" min="0.1" max="20" step="0.1" value="1" /></div>
           </div>
           <div class="btn-row stage-pass-row" style="margin-top:0; margin-bottom:8px;"><button id="betaPredictButton" class="stage-pass-button predict-pass" type="button" title="Analytic beta-stage predictions are not available in this panel.">predicted</button><button id="betaButton" class="primary stage-action beta-action stage-pass-button experimental-pass" title="Run the beta-prior experiment from the pooled evidence.">experimental</button></div>
           <div class="segmented-wrap" style="margin-top:10px;">
@@ -1399,15 +2145,15 @@
             </div>
           </div>
           <div class="cards">
-            <div class="metric"><div class="label"><span title="Average posterior confidence that ε is positive for the selected network when the prior itself is randomly drawn.">selected mean beta credence</span></div><div class="value" id="betaMeanCredValue">—</div></div>
-            <div class="metric"><div class="label"><span title="Experimental beta-credence total variance Var(B)=SV(B)+MV(B) for the selected network.">beta total Var(B)</span></div><div class="value" id="betaCredTotalValue">—</div></div>
+            <div class="metric"><div class="label"><span title="Average posterior confidence that ε is positive for the selected network when the prior itself is randomly drawn.">E[B] emp</span></div><div class="value" id="betaMeanCredValue">—</div></div>
+            <div class="metric"><div class="label"><span title="Experimental beta-credence total variance Var(B)=SV(B)+MV(B) for the selected network.">Var(B)</span></div><div class="value" id="betaCredTotalValue">—</div></div>
           </div>
           <div class="formula"><span title="Experimental beta-prior sign-credence variance is decomposed into social and modal components.">Var(B) = SV(B) + MV(B)</span></div>
         </div>
         <div class="chart-card">
           <div class="chart-toolbar">
             <div>
-              <h3>Beta prior credence across k</h3>
+              <h3>Beta-prior variance decomposition</h3>
               <div class="subnote">View. Filled bars are beta-prior credence results. Previous shows inherited pooled variance.</div>
             </div>
             <div class="segmented-wrap">
@@ -1427,17 +2173,17 @@
         <div class="network-modal-head">
           <div>
             <h3 id="networkModalTitle" class="network-modal-title">Networks</h3>
-            <p class="network-modal-sub">Set population and visible family here, then browse rendered thumbnails. Hover for k, s, and m details; click any network to make it active.</p>
+            <p class="network-modal-sub">Set N and the visible family, then browse rendered thumbnails. Hover for k, s, and m; click to select.</p>
           </div>
           <button id="closeNetworkModalButton" class="ghost-action" type="button" aria-label="Close network browser">close</button>
         </div>
         <div class="network-modal-controls">
           <div class="field">
-            <label for="populationInput">population N</label>
+            <label for="populationInput">N (population)</label>
             <input id="populationInput" type="number" min="3" max="80" step="1" value="24" />
           </div>
           <div class="field">
-            <label for="focusModeSelect">focus</label>
+            <label for="focusModeSelect">family slice</label>
             <select id="focusModeSelect">
               <option value="s" selected>s</option>
               <option value="k">k</option>
@@ -1465,10 +2211,16 @@
       text: getComputedStyle(document.documentElement).getPropertyValue('--text').trim(),
       muted: getComputedStyle(document.documentElement).getPropertyValue('--muted').trim(),
       grid: getComputedStyle(document.documentElement).getPropertyValue('--grid').trim(),
+      border: getComputedStyle(document.documentElement).getPropertyValue('--border').trim(),
+      borderStrong: getComputedStyle(document.documentElement).getPropertyValue('--border-strong').trim(),
+      accent: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
       ev: getComputedStyle(document.documentElement).getPropertyValue('--ev').trim(),
-      IV: getComputedStyle(document.documentElement).getPropertyValue('--h').trim(),
+      IV: getComputedStyle(document.documentElement).getPropertyValue('--iv').trim() || getComputedStyle(document.documentElement).getPropertyValue('--h').trim(),
+      IVPred: getComputedStyle(document.documentElement).getPropertyValue('--iv-pred').trim(),
       SV: getComputedStyle(document.documentElement).getPropertyValue('--sv').trim(),
+      SVPred: getComputedStyle(document.documentElement).getPropertyValue('--sv-pred').trim(),
       MV: getComputedStyle(document.documentElement).getPropertyValue('--mv').trim(),
+      MVPred: getComputedStyle(document.documentElement).getPropertyValue('--mv-pred').trim(),
       deltaPos: getComputedStyle(document.documentElement).getPropertyValue('--delta-pos').trim(),
       deltaNeg: getComputedStyle(document.documentElement).getPropertyValue('--delta-neg').trim(),
       rawPred: getComputedStyle(document.documentElement).getPropertyValue('--raw-pred').trim(),
@@ -1482,6 +2234,7 @@
       poolPred: getComputedStyle(document.documentElement).getPropertyValue('--pool-pred').trim(),
       poolData: getComputedStyle(document.documentElement).getPropertyValue('--pool-data').trim(),
       thumb: getComputedStyle(document.documentElement).getPropertyValue('--thumb').trim(),
+      thumbHub: getComputedStyle(document.documentElement).getPropertyValue('--thumb-hub').trim(),
       thumbComplete: getComputedStyle(document.documentElement).getPropertyValue('--thumb-complete').trim(),
       thumbActive: getComputedStyle(document.documentElement).getPropertyValue('--thumb-active').trim()
     };
@@ -1589,7 +2342,7 @@
       rawSummary: null,
       simData: null,
       rawData: null,
-      selectedK: 0,
+      selectedK: null,
       networkBuildDirty: false,
       networkBuildBusy: false,
       networkBuildKey: null,
@@ -1626,7 +2379,7 @@
       const runsDone = state.rawSummary?.completedRuns || state.simData?.completedRuns || 0;
       const networks = (state.networks?.length ? getVisibleAnalysisNetworks().length : 0) || (state.params ? Math.floor(state.params.N / 2) + 1 : 0) || 0;
       const evals = runsDone * networks;
-      if (els.statusText) els.statusText.textContent = `runs/setting ${runsDone.toLocaleString()} · nets ${networks.toLocaleString()} · total ${evals.toLocaleString()}`;
+      if (els.statusText) els.statusText.textContent = `runs=${runsDone.toLocaleString()} · networks=${networks.toLocaleString()} · evaluations=${evals.toLocaleString()}`;
     }
     function setStatus(_msg) { updateTopCounts(); }
     function simulationComparableParams(p) {
@@ -1847,21 +2600,10 @@
       } catch (err) {}
     }
     function centerStageInView(target, behavior = 'smooth') {
-      const el = typeof target === 'string' ? document.getElementById(target) : target;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const pageTop = window.scrollY + rect.top;
-      const effectiveHeight = Math.min(rect.height, Math.max(240, window.innerHeight * 0.84));
-      const top = Math.max(0, pageTop - Math.max(0, (window.innerHeight - effectiveHeight) / 2));
-      try {
-        window.scrollTo({ top, behavior });
-      } catch (err) {
-        window.scrollTo(0, top);
-      }
+      return;
     }
     async function centerStageAfterFrame(target, behavior = 'smooth') {
-      await nextFrame();
-      centerStageInView(target, behavior);
+      return;
     }
     async function ensureNetworksBuiltForPipeline(busyButton = null, busyText = 'preparing...') {
       state.params = readParams();
@@ -2580,7 +3322,7 @@ function buildNetworks() {
   const visible = getVisibleNetworks();
   const analysisVisible = getVisibleAnalysisNetworks();
   const keepSelectionVisible = visible.some(n => n.k === previousSelection);
-  state.selectedK = keepSelectionVisible ? previousSelection : (visible.length ? visible[0].k : (state.networks[0]?.k ?? 0));
+  state.selectedK = keepSelectionVisible ? previousSelection : null;
   const maxIndex = Math.max(0, analysisVisible.length - 1);
   for (const key of Object.keys(state.charts)) {
     if (key === 'rawRun') continue;
@@ -2872,12 +3614,14 @@ function computeLiveResults(perK, rawRunMeans, totalSuccessesAll, completedRuns)
     function updateHistoryStrip() {
       const p = state.params || readParams();
       const buildPending = state.networkBuildBusy || state.networkBuildDirty || !networksMatchCurrentParams(p);
-      if (els.historyRaw) els.historyRaw.textContent = `raw: ε=${fmt(p.epsilon,4)} · total=${p.totalEvidenceTrials ?? p.totalTrials} · runs=${p.runs}`;
+      if (els.historyRaw) els.historyRaw.textContent = `ε=${fmt(p.epsilon,4)} · T=${p.totalEvidenceTrials ?? p.totalTrials} · Runs=${p.runs}`;
       const net = state.networks.find(n => n.k === state.selectedK);
       if (els.historyNetwork) {
+        const visibleCount = getVisibleAnalysisNetworks().length || 0;
+        const focusText = p.focusMode === 'all' ? 'all rows' : `${p.focusMode}=${p.sliceValue}`;
         els.historyNetwork.textContent = buildPending
-          ? `network: N=${p.N} · focus=${p.focusMode}${p.focusMode !== 'all' ? '=' + p.sliceValue : ''} · build pending`
-          : (net ? `network: N=${p.N} · ${net.label} · focus=${p.focusMode}${p.focusMode !== 'all' ? '=' + p.sliceValue : ''}` : `network: N=${p.N} · focus=${p.focusMode}`);
+          ? `N=${p.N} · Networks=${visibleCount || '—'} · ${focusText} · pending`
+          : `N=${p.N} · Networks=${visibleCount} · ${focusText}`;
       }
       if (els.networkViewChip) {
         els.networkViewChip.textContent = buildPending
@@ -3448,10 +4192,7 @@ function clearDownstream(level) {
       const yFor = v => top + plotH - ((v - yMin) / (yMax - yMin || 1)) * plotH;
       const crisp = v => Math.round(v) + 0.5;
 
-      const grad = ctx.createLinearGradient(0, top, 0, top + plotH);
-      grad.addColorStop(0, '#fbfdff');
-      grad.addColorStop(1, '#f4f8fe');
-      ctx.fillStyle = grad;
+      ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, width, height);
 
       ctx.strokeStyle = COLORS.grid;
@@ -3643,7 +4384,7 @@ function clearDownstream(level) {
         if (!pts[i]) pts[i] = [cx, cy];
       }
 
-      ctx.strokeStyle = net.complete ? 'rgba(120,132,150,0.52)' : 'rgba(65,99,176,0.50)';
+      ctx.strokeStyle = net.complete ? COLORS.thumbComplete : COLORS.borderStrong;
       ctx.lineWidth = active ? 1.7 : 1.35;
       ctx.beginPath();
       for (let i = 0; i < N; i++) {
@@ -3659,12 +4400,12 @@ function clearDownstream(level) {
       for (let i = 0; i < N; i++) {
         ctx.beginPath();
         ctx.arc(pts[i][0], pts[i][1], i < s ? 2.25 : 1.85, 0, Math.PI * 2);
-        ctx.fillStyle = i < s ? COLORS.deltaNeg : (net.complete ? '#8a98aa' : COLORS.thumb);
+        ctx.fillStyle = i < s ? COLORS.thumbHub : (net.complete ? COLORS.thumbComplete : COLORS.thumb);
         ctx.fill();
       }
 
       if (active) {
-        ctx.strokeStyle = 'rgba(29,42,56,0.9)';
+        ctx.strokeStyle = COLORS.accent;
         ctx.lineWidth = 1.2;
         roundedRect(ctx, 1.1, 1.1, W - 2.2, H - 2.2, 6, false, true);
       }
@@ -3769,9 +4510,18 @@ function clearDownstream(level) {
       return getVarianceViewMode() === 'absolute' ? 0.00002 : 0.002;
     }
 
+    function clearSelection(render = true) {
+      if (state.selectedK == null) return;
+      state.selectedK = null;
+      if (render) {
+        renderThumbs();
+        renderCharts();
+      }
+    }
+
     function updateSelectionCards() {
       if (state.selectedK == null) {
-        els.selectedKValue.textContent = 'none';
+        els.selectedKValue.textContent = '—';
         els.selectedMValue.textContent = '—';
         els.rawResidualValue.textContent = '—';
         els.pooledTotalValue.textContent = '—';
@@ -3860,22 +4610,22 @@ function clearDownstream(level) {
 function renderCharts() {
   if (!state.predictedResults || !state.predictedResults.length) {
     clearChart(els.poolingChart, els.poolingTooltip, 'Set Stage 2 parameters to populate the pooled-raw accounting chart.');
-    clearChart(els.thresholdBudgetChart, els.thresholdBudgetTooltip, 'Pool the raw evidence first, then trigger the threshold stage.');
-    clearChart(els.credenceBudgetChart, els.credenceBudgetTooltip, 'Pool the raw evidence first, then trigger the sign stage.');
-    clearChart(els.betaCredenceChart, els.betaCredenceTooltip, 'Pool the raw evidence first, then trigger the beta stage.');
+    clearChart(els.thresholdBudgetChart, els.thresholdBudgetTooltip, 'Run the current pipeline to populate this panel.');
+    clearChart(els.credenceBudgetChart, els.credenceBudgetTooltip, 'Run the current pipeline to populate this panel.');
+    clearChart(els.betaCredenceChart, els.betaCredenceTooltip, 'Run the current pipeline to populate this panel.');
     updateSelectionCards();
     return;
   }
 
   renderPoolingChart();
   if (state.stageReady.threshold) renderThresholdComparisonChart();
-  else clearChart(els.thresholdBudgetChart, els.thresholdBudgetTooltip, state.stageReady.pooled ? 'Threshold stage not yet triggered. Click “compute threshold stage”.' : 'Pool the raw evidence first, then trigger the threshold stage.');
+  else clearChart(els.thresholdBudgetChart, els.thresholdBudgetTooltip, state.stageReady.pooled ? 'Threshold stage not yet populated. Run the current pipeline to load this panel.' : 'Run the current pipeline to populate this panel.');
 
   if (state.stageReady.bayes) renderCredenceComparisonChart();
-  else clearChart(els.credenceBudgetChart, els.credenceBudgetTooltip, state.stageReady.pooled ? 'Sign stage not yet triggered. Click “compute sign stage”.' : 'Pool the raw evidence first, then trigger the sign stage.');
+  else clearChart(els.credenceBudgetChart, els.credenceBudgetTooltip, state.stageReady.pooled ? 'Sign stage not yet populated. Run the current pipeline to load this panel.' : 'Run the current pipeline to populate this panel.');
 
   if (state.stageReady.beta) renderBetaCredenceChart();
-  else clearChart(els.betaCredenceChart, els.betaCredenceTooltip, state.stageReady.pooled ? 'Beta stage not yet triggered. Click “compute beta stage”.' : 'Pool the raw evidence first, then trigger the beta stage.');
+  else clearChart(els.betaCredenceChart, els.betaCredenceTooltip, state.stageReady.pooled ? 'Beta stage not yet populated. Run the current pipeline to load this panel.' : 'Run the current pipeline to populate this panel.');
   updateSelectionCards();
 }
 
@@ -4094,7 +4844,7 @@ function renderCharts() {
       const yFor = v => top + plotH - ((v - yMin) / (yMax - yMin || 1)) * plotH;
 
       const bg = createSvgEl('rect', { x: 0, y: 0, width, height, fill: 'transparent' });
-      bg.addEventListener('click', () => { state.selectedK = null; renderThumbs(); renderCharts(); });
+      bg.addEventListener('click', () => { clearSelection(); });
       svg.appendChild(bg);
       for (let t = 0; t <= 5; t++) {
         const frac = t / 5;
@@ -4166,7 +4916,7 @@ function renderCharts() {
               { key: 'IV', value: formatChartValue(predRow.predIV), swatch: COLORS.IV },
               { key: 'SV(Y)', value: formatChartValue(predRow.predSV), swatch: COLORS.SV },
               { key: 'MV(Y)', value: formatChartValue(predRow.predMV), swatch: COLORS.MV },
-              { key: 'Var(Y)', value: formatChartValue(predRow.predPooledTotal), swatch: COLORS.rawPred }
+              { key: 'Var(Y)', value: formatChartValue(predRow.predPooledTotal), swatch: COLORS.ev }
             ]
           });
         }
@@ -4178,7 +4928,7 @@ function renderCharts() {
               { key: 'IV', value: formatChartValue(expRow.IV), swatch: COLORS.IV },
               { key: 'SV(Y)', value: formatChartValue(expRow.SV), swatch: COLORS.SV },
               { key: 'MV(Y)', value: formatChartValue(expRow.MV), swatch: COLORS.MV },
-              { key: 'Var(Y)', value: formatChartValue(expRow.pooledTotal), swatch: COLORS.rawData },
+              { key: 'Var(Y)', value: formatChartValue(expRow.pooledTotal), swatch: COLORS.ev },
               { key: 'residual', value: formatChartValue(expRow.rawResidual), swatch: COLORS.deltaNeg }
             ]
           });
@@ -4233,8 +4983,10 @@ function renderCharts() {
       if (options.barMode === 'predictedHatch') {
         ['IV','SV','MV'].forEach(segKey => {
           const pattern = createSvgEl('pattern', { id: `${chartKey}-hatch-${segKey}`, patternUnits: 'userSpaceOnUse', width: 8, height: 8, patternTransform: 'rotate(45)' });
-          const bg = createSvgEl('rect', { x: 0, y: 0, width: 8, height: 8, fill: COLORS[segKey] });
-          const line = createSvgEl('line', { x1: 0, y1: 0, x2: 0, y2: 8, stroke: COLORS.poolPred, 'stroke-width': 2.1, opacity: 0.75, 'shape-rendering': 'crispEdges' });
+          const predFill = segKey === 'IV' ? COLORS.IVPred : segKey === 'SV' ? COLORS.SVPred : COLORS.MVPred;
+          const baseStroke = segKey === 'IV' ? COLORS.IV : segKey === 'SV' ? COLORS.SV : COLORS.MV;
+          const bg = createSvgEl('rect', { x: 0, y: 0, width: 8, height: 8, fill: predFill });
+          const line = createSvgEl('line', { x1: 0, y1: 0, x2: 0, y2: 8, stroke: baseStroke, 'stroke-width': 1.6, opacity: 0.42, 'shape-rendering': 'crispEdges' });
           pattern.appendChild(bg);
           pattern.appendChild(line);
           defs.appendChild(pattern);
@@ -4271,7 +5023,7 @@ function renderCharts() {
       const crisp = v => Math.round(v) + 0.5;
 
       const bg = createSvgEl('rect', { x: 0, y: 0, width, height, fill: 'transparent' });
-      bg.addEventListener('click', () => { state.selectedK = null; renderThumbs(); renderCharts(); });
+      bg.addEventListener('click', () => { clearSelection(); });
       svg.appendChild(bg);
       for (let t = 0; t <= 5; t++) {
         const frac = t / 5;
@@ -4303,8 +5055,9 @@ function renderCharts() {
             const fill = options.barMode === 'predictedHatch' ? `url(#${chartKey}-hatch-${seg.key === 'predIV' ? 'IV' : seg.key === 'predSV' ? 'SV' : seg.key === 'predMV' ? 'MV' : seg.key})` : seg.color;
             const rectAttrs = { x, y: Math.min(y1,y2), width: barW, height: Math.max(1, Math.abs(y2-y1)), rx: 3, fill };
             if (options.barMode === 'predictedHatch') {
-              rectAttrs.stroke = COLORS.poolPred;
-              rectAttrs['stroke-width'] = 0.8;
+              rectAttrs.stroke = seg.key === 'predIV' ? COLORS.IV : seg.key === 'predSV' ? COLORS.SV : seg.key === 'predMV' ? COLORS.MV : COLORS.text;
+              rectAttrs['stroke-width'] = 0.7;
+              rectAttrs['stroke-opacity'] = 0.34;
             }
             svg.appendChild(createSvgEl('rect', rectAttrs));
             stackTop += value;
@@ -4381,7 +5134,7 @@ function renderCharts() {
       const defs = createSvgEl('defs');
       const makePattern = id => {
         const pattern = createSvgEl('pattern', { id, patternUnits: 'userSpaceOnUse', width: 8, height: 8, patternTransform: 'rotate(45)' });
-        pattern.appendChild(createSvgEl('line', { x1: 0, y1: 0, x2: 0, y2: 8, stroke: '#111', 'stroke-opacity': 0.9, 'stroke-width': 2, 'shape-rendering': 'crispEdges' }));
+        pattern.appendChild(createSvgEl('line', { x1: 0, y1: 0, x2: 0, y2: 8, stroke: COLORS.ev, 'stroke-opacity': 0.42, 'stroke-width': 1.6, 'shape-rendering': 'crispEdges' }));
         return pattern;
       };
       defs.appendChild(makePattern('threshold-prev-ref'));
@@ -4406,7 +5159,7 @@ function renderCharts() {
       const yFor = v => top + plotH - ((v - yMin) / (yMax - yMin || 1)) * plotH;
 
       const bg = createSvgEl('rect', { x: 0, y: 0, width, height, fill: 'transparent' });
-      bg.addEventListener('click', () => { state.selectedK = null; renderThumbs(); renderCharts(); });
+      bg.addEventListener('click', () => { clearSelection(); });
       svg.appendChild(bg);
       for (let t = 0; t <= 5; t++) {
         const frac = t / 5;
@@ -4444,7 +5197,7 @@ function renderCharts() {
           const refY = Math.min(yFor(refValue), yFor(0));
           svg.appendChild(createSvgEl('rect', {
             x, y: refY, width: barW, height: refHeight,
-            fill: 'url(#threshold-prev-ref)', 'fill-opacity': 0.32, stroke: '#111', 'stroke-width': 1.05, 'shape-rendering': 'crispEdges'
+            fill: 'url(#threshold-prev-ref)', 'fill-opacity': 0.22, stroke: COLORS.ev, 'stroke-opacity': 0.24, 'stroke-width': 0.9, 'shape-rendering': 'crispEdges'
           }));
         }
       };
@@ -4482,7 +5235,7 @@ function renderCharts() {
           tooltipSections.push({ tone: 'pred', label: 'predicted', lines: [
             { key: 'SV(L)', value: formatChartValue(predRow.predThrSV), swatch: COLORS.SV },
             { key: 'MV(L)', value: formatChartValue(predRow.predThrMV), swatch: COLORS.MV },
-            { key: 'Var(L)', value: formatChartValue(predRow.predThrTotal), swatch: COLORS.rawPred },
+            { key: 'Var(L)', value: formatChartValue(predRow.predThrTotal), swatch: COLORS.ev },
             { key: 'mean lucky', value: fmt(predRow.predMeanLucky, 6), swatch: COLORS.rawPred }
           ]});
         }
@@ -4490,7 +5243,7 @@ function renderCharts() {
           tooltipSections.push({ tone: 'exp', label: 'experimental', lines: [
             { key: 'SV(L)', value: formatChartValue(expRow.thrSV), swatch: COLORS.SV },
             { key: 'MV(L)', value: formatChartValue(expRow.thrMV), swatch: COLORS.MV },
-            { key: 'Var(L)', value: formatChartValue(expRow.thrTotal), swatch: COLORS.rawData },
+            { key: 'Var(L)', value: formatChartValue(expRow.thrTotal), swatch: COLORS.ev },
             { key: 'mean lucky', value: fmt(expRow.meanLucky, 6), swatch: COLORS.rawData }
           ]});
         }
@@ -4544,7 +5297,7 @@ function renderCharts() {
       host.appendChild(svg);
       const defs = createSvgEl('defs');
       const pattern = createSvgEl('pattern', { id: 'sign-cred-prev-ref', patternUnits: 'userSpaceOnUse', width: 8, height: 8, patternTransform: 'rotate(45)' });
-      pattern.appendChild(createSvgEl('line', { x1: 0, y1: 0, x2: 0, y2: 8, stroke: '#111', 'stroke-opacity': 0.9, 'stroke-width': 2, 'shape-rendering': 'crispEdges' }));
+      pattern.appendChild(createSvgEl('line', { x1: 0, y1: 0, x2: 0, y2: 8, stroke: COLORS.ev, 'stroke-opacity': 0.42, 'stroke-width': 1.6, 'shape-rendering': 'crispEdges' }));
       defs.appendChild(pattern);
       svg.appendChild(defs);
 
@@ -4568,7 +5321,7 @@ function renderCharts() {
       const yFor = v => top + plotH - ((v - yMin) / (yMax - yMin || 1)) * plotH;
 
       const bg = createSvgEl('rect', { x: 0, y: 0, width, height, fill: 'transparent' });
-      bg.addEventListener('click', () => { state.selectedK = null; renderThumbs(); renderCharts(); });
+      bg.addEventListener('click', () => { clearSelection(); });
       svg.appendChild(bg);
       for (let t = 0; t <= 5; t++) {
         const frac = t / 5;
@@ -4638,7 +5391,7 @@ function renderCharts() {
           tooltipSections.push({ tone: 'pred', label: 'predicted', lines: [
             { key: 'SV(C)', value: formatChartValue(predRow.predCredSV), swatch: COLORS.SV },
             { key: 'MV(C)', value: formatChartValue(predRow.predCredMV), swatch: COLORS.MV },
-            { key: 'Var(C)', value: formatChartValue(predRow.predCredTotal), swatch: COLORS.rawPred },
+            { key: 'Var(C)', value: formatChartValue(predRow.predCredTotal), swatch: COLORS.ev },
             { key: 'mean credence', value: fmt(predRow.predMeanCred, 6), swatch: COLORS.rawPred }
           ]});
         }
@@ -4646,7 +5399,7 @@ function renderCharts() {
           tooltipSections.push({ tone: 'exp', label: 'experimental', lines: [
             { key: 'SV(C)', value: formatChartValue(expRow.credSV), swatch: COLORS.SV },
             { key: 'MV(C)', value: formatChartValue(expRow.credMV), swatch: COLORS.MV },
-            { key: 'Var(C)', value: formatChartValue(expRow.credTotal), swatch: COLORS.rawData },
+            { key: 'Var(C)', value: formatChartValue(expRow.credTotal), swatch: COLORS.ev },
             { key: 'mean credence', value: fmt(expRow.meanCred, 6), swatch: COLORS.rawData }
           ]});
         }
@@ -4697,7 +5450,7 @@ function renderCharts() {
       host.appendChild(svg);
       const defs = createSvgEl('defs');
       const pattern = createSvgEl('pattern', { id: 'beta-cred-prev-ref', patternUnits: 'userSpaceOnUse', width: 8, height: 8, patternTransform: 'rotate(45)' });
-      pattern.appendChild(createSvgEl('line', { x1: 0, y1: 0, x2: 0, y2: 8, stroke: '#111', 'stroke-opacity': 0.9, 'stroke-width': 2, 'shape-rendering': 'crispEdges' }));
+      pattern.appendChild(createSvgEl('line', { x1: 0, y1: 0, x2: 0, y2: 8, stroke: COLORS.ev, 'stroke-opacity': 0.42, 'stroke-width': 1.6, 'shape-rendering': 'crispEdges' }));
       defs.appendChild(pattern);
       svg.appendChild(defs);
 
@@ -4724,7 +5477,7 @@ function renderCharts() {
       const yFor = v => top + plotH - ((v - yMin) / (yMax - yMin || 1)) * plotH;
 
       const bg = createSvgEl('rect', { x: 0, y: 0, width, height, fill: 'transparent' });
-      bg.addEventListener('click', () => { state.selectedK = null; renderThumbs(); renderCharts(); });
+      bg.addEventListener('click', () => { clearSelection(); });
       svg.appendChild(bg);
       for (let t = 0; t <= 5; t++) {
         const frac = t / 5;
@@ -4759,7 +5512,7 @@ function renderCharts() {
           const refValue = normalize(row.pooledTotal, refDenom);
           const refHeight = Math.max(1, Math.abs(yFor(refValue) - yFor(0)));
           const refY = Math.min(yFor(refValue), yFor(0));
-          svg.appendChild(createSvgEl('rect', { x, y: refY, width: barW, height: refHeight, fill: 'url(#beta-cred-prev-ref)', 'fill-opacity': 0.32, stroke: '#111', 'stroke-width': 1.05, 'shape-rendering': 'crispEdges' }));
+          svg.appendChild(createSvgEl('rect', { x, y: refY, width: barW, height: refHeight, fill: 'url(#beta-cred-prev-ref)', 'fill-opacity': 0.22, stroke: COLORS.ev, 'stroke-opacity': 0.24, 'stroke-width': 0.9, 'shape-rendering': 'crispEdges' }));
         }
         const kVal = row.k;
         const label = `${row.kValue},${row.sValue}`;
@@ -4773,7 +5526,7 @@ function renderCharts() {
           tooltipSections.push({ tone: 'exp', label: 'experimental', lines: [
             { key: 'SV(B)', value: formatChartValue(row.betaCredSV), swatch: COLORS.SV },
             { key: 'MV(B)', value: formatChartValue(row.betaCredMV), swatch: COLORS.MV },
-            { key: 'Var(B)', value: formatChartValue(row.betaCredTotal), swatch: COLORS.rawData },
+            { key: 'Var(B)', value: formatChartValue(row.betaCredTotal), swatch: COLORS.ev },
             { key: 'mean beta credence', value: fmt(row.meanBetaCred, 6), swatch: COLORS.rawData }
           ]});
         }
@@ -4831,7 +5584,7 @@ function renderCharts() {
       const [yMin, yMax] = resolveYRange(chartKey, baseMin, baseMax, 'signed');
       const yFor = v => top + plotH - ((v - yMin) / (yMax - yMin || 1)) * plotH;
       const bg = createSvgEl('rect', { x: 0, y: 0, width, height, fill: 'transparent' });
-      bg.addEventListener('click', () => { state.selectedK = null; renderThumbs(); renderCharts(); });
+      bg.addEventListener('click', () => { clearSelection(); });
       svg.appendChild(bg);
       for (let t = 0; t <= 5; t++) {
         const frac = t / 5;
@@ -4960,7 +5713,7 @@ function renderCharts() {
     }
 
     function showTooltip(evt, tooltip, payload) {
-      if (!tooltip || !tooltip.parentElement) return;
+      if (!tooltip) return;
       const legacyLines = Array.isArray(payload?.lines) ? payload.lines : [];
       const sections = Array.isArray(payload?.sections) && payload.sections.length
         ? payload.sections
@@ -4988,13 +5741,14 @@ function renderCharts() {
       tooltip.style.opacity = 1;
       tooltip.style.left = '0px';
       tooltip.style.top = '0px';
-      const parentRect = tooltip.parentElement.getBoundingClientRect();
-      const parentW = tooltip.parentElement.clientWidth || parentRect.width || 0;
-      const parentH = tooltip.parentElement.clientHeight || parentRect.height || 0;
-      const tipW = Math.min(tooltip.offsetWidth || 250, Math.max(190, parentW - 10));
+      tooltip.style.transform = 'translate(-9999px,-9999px)';
+      const viewportW = window.innerWidth || document.documentElement.clientWidth || 0;
+      const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
+      const pad = 12;
+      const tipW = Math.min(tooltip.offsetWidth || 250, Math.max(220, viewportW - pad * 2));
       const tipH = tooltip.offsetHeight || 110;
-      const x = Math.max(6, Math.min(evt.clientX - parentRect.left + 14, parentW - tipW - 6));
-      const y = Math.max(6, Math.min(evt.clientY - parentRect.top + 14, parentH - tipH - 6));
+      const x = Math.max(pad, Math.min(evt.clientX + 18, viewportW - tipW - pad));
+      const y = Math.max(pad, Math.min(evt.clientY + 18, viewportH - tipH - pad));
       tooltip.style.transform = `translate(${x}px, ${y}px)`;
     }
     function hideTooltip(tooltip) {
@@ -5003,7 +5757,7 @@ function renderCharts() {
       tooltip.style.transform = 'translate(-9999px,-9999px)';
     }
 
-    els.thumbs.addEventListener('click', evt => { if (evt.target === els.thumbs) { state.selectedK = null; renderThumbs(); renderCharts(); } });
+    els.thumbs.addEventListener('click', evt => { if (evt.target === els.thumbs) { clearSelection(); } });
 
     function renderViews() {
       renderRawStage();
@@ -5113,7 +5867,7 @@ function clearResultsAndRerender(message, level='raw') {
       renderCharts();
       updateSelectionCards();
       if (!state.running) setSimulationButtons(false);
-      setStatus('Beta prior draw mode set to together. Recompute the beta stage to refresh that panel.');
+      setStatus('Beta prior draw mode set to together. Run the current pipeline to refresh that panel.');
     });
     els.betaPriorSeparate.addEventListener('click', () => {
       state.ui.betaPriorMode = 'separate';
@@ -5125,7 +5879,7 @@ function clearResultsAndRerender(message, level='raw') {
       renderCharts();
       updateSelectionCards();
       if (!state.running) setSimulationButtons(false);
-      setStatus('Beta prior draw mode set to separate. Recompute the beta stage to refresh that panel.');
+      setStatus('Beta prior draw mode set to separate. Run the current pipeline to refresh that panel.');
     });
     els.rawDisplayRun.addEventListener('click', () => { state.ui.rawDisplay = 'run'; updateRawToggleButtons(); renderRawStage(); });
     els.rawDisplaySorted.addEventListener('click', () => { state.ui.rawDisplay = 'sorted'; updateRawToggleButtons(); renderRawStage(); });
@@ -5151,6 +5905,14 @@ function clearResultsAndRerender(message, level='raw') {
       els.networkModal.addEventListener('click', evt => { if (evt.target === els.networkModal) closeNetworkModal(); });
       document.addEventListener('keydown', evt => { if (evt.key === 'Escape' && els.networkModal.classList.contains('open')) closeNetworkModal(); });
     }
+    document.addEventListener('click', evt => {
+      if (state.selectedK == null) return;
+      const target = evt.target;
+      if (!(target instanceof Element)) return;
+      if (target.closest('button, input, select, option, label, .thumb-card, .network-modal, .tooltip, .control-panel')) return;
+      if (target.closest('svg') && !target.closest('.chart-wrap')) return;
+      clearSelection();
+    });
 
     if (els.populationInput) els.populationInput.addEventListener('change', () => {
       state.params = readParams();
@@ -5173,7 +5935,7 @@ function clearResultsAndRerender(message, level='raw') {
       ensureResultsSkeleton();
       renderCharts();
       updateSelectionCards();
-      setStatus('Beta prior controls changed. Recompute the beta stage to refresh that panel.');
+      setStatus('Beta prior controls changed. Run the current pipeline to refresh that panel.');
     }));
 
     if (els.signPriorRange) {
@@ -5185,7 +5947,7 @@ function clearResultsAndRerender(message, level='raw') {
         ensureResultsSkeleton();
         renderCharts();
         updateSelectionCards();
-        setStatus('Sign prior changed. Recompute the sign stage to refresh the experimental credence panel.');
+        setStatus('Sign prior changed. Run the current pipeline to refresh the experimental credence panel.');
       });
     }
     if (els.signPriorInput) {
@@ -5199,7 +5961,7 @@ function clearResultsAndRerender(message, level='raw') {
         ensureResultsSkeleton();
         renderCharts();
         updateSelectionCards();
-        setStatus('Sign prior changed. Recompute the sign stage to refresh the experimental credence panel.');
+        setStatus('Sign prior changed. Run the current pipeline to refresh the experimental credence panel.');
       });
     }
     if (els.signPriorTogether) els.signPriorTogether.addEventListener('click', () => {
@@ -5211,7 +5973,7 @@ function clearResultsAndRerender(message, level='raw') {
       ensureResultsSkeleton();
       renderCharts();
       updateSelectionCards();
-      setStatus('Sign-prior mode set to together. Recompute the sign stage to refresh experimental credence.');
+      setStatus('Sign-prior mode set to together. Run the current pipeline to refresh experimental credence.');
     });
     if (els.signPriorSeparate) els.signPriorSeparate.addEventListener('click', () => {
       state.ui.signPriorMode = 'separate';
@@ -5222,7 +5984,7 @@ function clearResultsAndRerender(message, level='raw') {
       ensureResultsSkeleton();
       renderCharts();
       updateSelectionCards();
-      setStatus('Sign-prior mode set to independent. Recompute the sign stage to refresh experimental credence.');
+      setStatus('Sign-prior mode set to independent. Run the current pipeline to refresh experimental credence.');
     });
     ['input','change'].forEach(evtName => els.runsInput.addEventListener(evtName, () => {
       if (!state.running) {
